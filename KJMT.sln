@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KJMT .Temperatura.UnitTestM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KJMT.Manipulaciones", "KJMT.Manipulaciones\KJMT.Manipulaciones.csproj", "{5135DEAA-3370-4B6D-A612-6EB52F32F204}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KJMT.Manipulaciones.UnitTest.xUnit", "KJMT.Manipulaciones.UnitTest.xUnit\KJMT.Manipulaciones.UnitTest.xUnit.csproj", "{08CB713A-FF86-40F1-BDD6-4066A1CCFD60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{5135DEAA-3370-4B6D-A612-6EB52F32F204}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5135DEAA-3370-4B6D-A612-6EB52F32F204}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5135DEAA-3370-4B6D-A612-6EB52F32F204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08CB713A-FF86-40F1-BDD6-4066A1CCFD60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08CB713A-FF86-40F1-BDD6-4066A1CCFD60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08CB713A-FF86-40F1-BDD6-4066A1CCFD60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08CB713A-FF86-40F1-BDD6-4066A1CCFD60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
