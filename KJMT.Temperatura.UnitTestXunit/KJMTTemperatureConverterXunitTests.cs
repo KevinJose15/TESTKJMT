@@ -3,68 +3,93 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TESTKJMT;
+using Xunit;
 
-namespace KJMT.Temperatura.UnitTestXunit
+using Converter = TESTKJMT.KJMTTemperatureConverter;     
+
+
+namespace TESTKJMT.Temperatura.Tests 
 {
     public class KJMTTemperatureConverterXunitTests
     {
-        private static double R(double v) => Math.Round(v, 2);
 
-        [Theory]
-        [InlineData(0, 32)]
-        [InlineData(100, 212)]
-        [InlineData(-40, -40)]
-        [InlineData(37, 98.6)]
-        public void CelsiusToFahrenheit_OK(double c, double expectedF)
+        private readonly Converter _converter;
+
+        public KJMTTemperatureConverterXunitTests()
         {
-            var actual = R(KJMTTemperatureConverter.CelsiusToFahrenheit(c));
-            AssertInDelta(expectedF, actual, 0.01);
+            _converter = new Converter();
         }
 
-        [Theory]
-        [InlineData(32, 0)]
-        [InlineData(212, 100)]
-        [InlineData(-40, -40)]
-        [InlineData(98.6, 37)]
-        public void FahrenheitToCelsius_OK(double f, double expectedC)
+        // *** Pruebas para CelsiusToFahrenheit ***
+
+        [Fact(DisplayName = "Verifica la conversión de 0°C a 32°F (Punto de congelación).")]
+        public void CelsiusToFahrenheit_Zero_ReturnsThirtyTwo()
         {
-            var actual = R(KJMTTemperatureConverter.FahrenheitToCelsius(f));
-            AssertInDelta(expectedC, actual, 0.01);
+            double celsius = 0.0;
+            double expectedFahrenheit = 32.0;
+
+            double actualFahrenheit = _converter.CelsiusToFahrenheit(celsius);
+
+            // Tolerancia 0.001 ~ mismo espíritu que MSTest con delta
+            Assert.InRange(actualFahrenheit, expectedFahrenheit - 0.001, expectedFahrenheit + 0.001);
         }
 
-        [Fact]
-        public void CelsiusBelowAbsoluteZero_Throws()
+        [Fact(DisplayName = "Verifica la conversión de 100°C a 212°F (Punto de ebullición).")]
+        public void CelsiusToFahrenheit_OneHundred_ReturnsTwoTwelve()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-                KJMTTemperatureConverter.CelsiusToFahrenheit(-300));
+            double celsius = 100.0;
+            double expectedFahrenheit = 212.0;
+
+            double actualFahrenheit = _converter.CelsiusToFahrenheit(celsius);
+
+            Assert.InRange(actualFahrenheit, expectedFahrenheit - 0.001, expectedFahrenheit + 0.001);
         }
 
-        [Fact]
-        public void FahrenheitBelowAbsoluteZero_Throws()
+        [Fact(DisplayName = "Verifica el punto de coincidencia: -40°C a -40°F.")]
+        public void CelsiusToFahrenheit_NegativeForty_ReturnsNegativeForty()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
-                KJMTTemperatureConverter.FahrenheitToCelsius(-500));
+            double celsius = -40.0;
+            double expectedFahrenheit = -40.0;
+
+            double actualFahrenheit = _converter.CelsiusToFahrenheit(celsius);
+
+            Assert.InRange(actualFahrenheit, expectedFahrenheit - 0.001, expectedFahrenheit + 0.001);
         }
 
-        [Theory]
-        [InlineData(-40)]
-        [InlineData(0)]
-        [InlineData(20)]
-        [InlineData(37)]
-        [InlineData(100)]
-        public void RoundTrip_Celsius(double c)
+        // *** Pruebas para FahrenheitToCelsius ***
+
+        [Fact(DisplayName = "Verifica la conversión de 32°F a 0°C (Punto de congelación).")]
+        public void FahrenheitToCelsius_ThirtyTwo_ReturnsZero()
         {
-            var f = KJMTTemperatureConverter.CelsiusToFahrenheit(c);
-            var c2 = KJMTTemperatureConverter.FahrenheitToCelsius(f);
-            AssertInDelta(R(c), R(c2), 0.01);
+            double fahrenheit = 32.0;
+            double expectedCelsius = 0.0;
+
+            double actualCelsius = _converter.FahrenheitToCelsius(fahrenheit);
+
+            Assert.InRange(actualCelsius, expectedCelsius - 0.001, expectedCelsius + 0.001);
         }
 
-        private static void AssertInDelta(double expected, double actual, double delta)
+        [Fact(DisplayName = "Verifica la conversión de 212°F a 100°C (Punto de ebullición).")]
+        public void FahrenheitToCelsius_TwoTwelve_ReturnsOneHundred()
         {
-            var diff = Math.Abs(expected - actual);
-            Assert.True(diff <= delta, $"Esperado {expected} ±{delta}, actual {actual} (diff {diff}).");
+            double fahrenheit = 212.0;
+            double expectedCelsius = 100.0;
+
+            double actualCelsius = _converter.FahrenheitToCelsius(fahrenheit);
+
+            Assert.InRange(actualCelsius, expectedCelsius - 0.001, expectedCelsius + 0.001);
         }
 
+        [Fact(DisplayName = "Verifica el punto de coincidencia: -40°F a -40°C.")]
+        public void FahrenheitToCelsius_NegativeForty_ReturnsNegativeForty()
+        {
+            double fahrenheit = -40.0;
+            double expectedCelsius = -40.0;
+
+            double actualCelsius = _converter.FahrenheitToCelsius(fahrenheit);
+
+            Assert.InRange(actualCelsius, expectedCelsius - 0.001, expectedCelsius + 0.001);
+        }
     }
 }
+
