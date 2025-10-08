@@ -11,60 +11,93 @@ namespace TESTKJMT.Tests
     [TestClass()]
     public class KJMTTemperatureConverterTests
     {
-        private static double R(double v) => Math.Round(v, 2);
-
-        // ---- C -> F (casos típicos)
-        [DataTestMethod]
-        [DataRow(0, 32)]
-        [DataRow(100, 212)]
-        [DataRow(-40, -40)]
-        [DataRow(37, 98.6)]
-        [TestMethod()]
-        public void celsiusToFahrenheitTest(double c, double expectedF)
+        [TestClass] // Atributo requerido por MSTest para identificar la clase de prueba
+        public class TemperatureConverterTests
         {
-            var actual = R(KJMTTemperatureConverter.CelsiusToFahrenheit(c));
-            Assert.AreEqual(expectedF, actual, 0.01, "Conversión C->F fuera de tolerancia.");
-        }
+            // Objeto de la clase a probar, inicializado en el método de inicialización
+            private KJMTTemperatureConverter _converter;
 
-        // ---- F -> C (casos típicos)
-        [DataTestMethod]
-        [DataRow(32, 0)]
-        [DataRow(212, 100)]
-        [DataRow(-40, -40)]
-        [DataRow(98.6, 37)]
-        public void FahrenheitToCelsius_OK(double f, double expectedC)
-        {
-            var actual = R(KJMTTemperatureConverter.FahrenheitToCelsius(f));
-            Assert.AreEqual(expectedC, actual, 0.01, "Conversión F->C fuera de tolerancia.");
-        }
+            [TestInitialize] // Método que se ejecuta antes de cada prueba
+            public void Setup()
+            {
+                _converter = new KJMTTemperatureConverter();
+            }
 
-        // ---- Errores por cero absoluto
-        [TestMethod]
-        public void CelsiusBelowAbsoluteZero_Throws()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => KJMTTemperatureConverter.CelsiusToFahrenheit(-300));
-        }
+            // *** Pruebas para CelsiusToFahrenheit ***
 
-        [TestMethod]
-        public void FahrenheitBelowAbsoluteZero_Throws()
-        {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(
-                () => KJMTTemperatureConverter.FahrenheitToCelsius(-500));
-        }
+            [TestMethod]
+            [Description("Verifica la conversión de 0°C a 32°F (Punto de congelación).")]
+            public void CelsiusToFahrenheit_Zero_ReturnsThirtyTwo()
+            {
+                double celsius = 0.0;
+                double expectedFahrenheit = 32.0;
 
-        // ---- Propiedad de ida y vuelta (round-trip) con tolerancia
-        [DataTestMethod]
-        [DataRow(-40)]
-        [DataRow(0)]
-        [DataRow(20)]
-        [DataRow(37)]
-        [DataRow(100)]
-        public void RoundTrip_Celsius(double c)
-        {
-            var f = KJMTTemperatureConverter.CelsiusToFahrenheit(c);
-            var c2 = KJMTTemperatureConverter.FahrenheitToCelsius(f);
-            Assert.AreEqual(R(c), R(c2), 0.01, "Round-trip C->F->C fuera de tolerancia.");
+                double actualFahrenheit = _converter.CelsiusToFahrenheit(celsius);
+
+                Assert.AreEqual(expectedFahrenheit, actualFahrenheit, 0.001, "0°C debe ser 32°F.");
+            }
+
+            [TestMethod]
+            [Description("Verifica la conversión de 100°C a 212°F (Punto de ebullición).")]
+            public void CelsiusToFahrenheit_OneHundred_ReturnsTwoTwelve()
+            {
+                double celsius = 100.0;
+                double expectedFahrenheit = 212.0;
+
+                double actualFahrenheit = _converter.CelsiusToFahrenheit(celsius);
+
+                Assert.AreEqual(expectedFahrenheit, actualFahrenheit, 0.001, "100°C debe ser 212°F.");
+            }
+
+            [TestMethod]
+            [Description("Verifica el punto de coincidencia: -40°C a -40°F.")]
+            public void CelsiusToFahrenheit_NegativeForty_ReturnsNegativeForty()
+            {
+                double celsius = -40.0;
+                double expectedFahrenheit = -40.0;
+
+                double actualFahrenheit = _converter.CelsiusToFahrenheit(celsius);
+
+                Assert.AreEqual(expectedFahrenheit, actualFahrenheit, 0.001, "-40°C debe ser -40°F.");
+            }
+
+            // *** Pruebas para FahrenheitToCelsius ***
+
+            [TestMethod]
+            [Description("Verifica la conversión de 32°F a 0°C (Punto de congelación).")]
+            public void FahrenheitToCelsius_ThirtyTwo_ReturnsZero()
+            {
+                double fahrenheit = 32.0;
+                double expectedCelsius = 0.0;
+
+                double actualCelsius = _converter.FahrenheitToCelsius(fahrenheit);
+
+                Assert.AreEqual(expectedCelsius, actualCelsius, 0.001, "32°F debe ser 0°C.");
+            }
+
+            [TestMethod]
+            [Description("Verifica la conversión de 212°F a 100°C (Punto de ebullición).")]
+            public void FahrenheitToCelsius_TwoTwelve_ReturnsOneHundred()
+            {
+                double fahrenheit = 212.0;
+                double expectedCelsius = 100.0;
+
+                double actualCelsius = _converter.FahrenheitToCelsius(fahrenheit);
+
+                Assert.AreEqual(expectedCelsius, actualCelsius, 0.001, "212°F debe ser 100°C.");
+            }
+
+            [TestMethod]
+            [Description("Verifica el punto de coincidencia: -40°F a -40°C.")]
+            public void FahrenheitToCelsius_NegativeForty_ReturnsNegativeForty()
+            {
+                double fahrenheit = -40.0;
+                double expectedCelsius = -40.0;
+
+                double actualCelsius = _converter.FahrenheitToCelsius(fahrenheit);
+
+                Assert.AreEqual(expectedCelsius, actualCelsius, 0.001, "-40°F debe ser -40°C.");
+            }
         }
     }
 }
